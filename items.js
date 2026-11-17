@@ -151,6 +151,17 @@ window.WISHLIST = {
       shopify: {"url": "https://store.taylorswift.com/products/fearless-taylor-s-version-sweatpants.js", "variant": "L"},
     },
     {
+      id: "ts-folklore-cardigan-knit-shorts",
+      name: "folklore Album Cardigan Cable Knit Sweater Shorts (M)",
+      price: 65,
+      category: "Taylor Swift",
+      description: "Size M. Cream cable-knit shorts with dark gray striped trim, star embroidery on the hem, a drawcord waist, and pockets.",
+      image: "https://cdn.shopify.com/s/files/1/0011/4651/9637/files/01_HOLIDAY26_CardiganCollection_8385313062_LAYFLAT_001_R2.webp?v=1794935620",
+      link: "https://store.taylorswift.com/products/folklore-album-cardigan-cable-knit-sweater-shorts?variant=45121871216840",
+      vendor: "Taylor Swift Store",
+      shopify: {"url": "https://store.taylorswift.com/products/folklore-album-cardigan-cable-knit-sweater-shorts.js", "variant": "M"},
+    },
+    {
       id: "br-factory-corduroy-bucket-hat",
       name: "Banana Republic Factory Corduroy Bucket Hat, Chocolate (S/M)",
       price: 50,
