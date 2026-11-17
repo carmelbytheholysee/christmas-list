@@ -261,6 +261,33 @@ window.WISHLIST = {
       ],
     },
     {
+      id: "book-sontag-reborn",
+      name: "Reborn: Journals and Notebooks, 1947–1963, by Susan Sontag (Paperback)",
+      price: 25,
+      category: "Books",
+      description: "Picador paperback, edited by David Rieff. The first volume of Sontag's journals.",
+      image: "https://images-us.bookshop.org/ingram/9780312428501.jpg?width=600",
+      link: "https://www.amazon.com/dp/0312428502",
+      altLink: "https://bookshop.org/book/9780312428501",
+      watch: [
+        { store: "Amazon", url: "https://www.amazon.com/dp/0312428502", check: "price", method: "search" },
+        { store: "Bookshop.org", url: "https://bookshop.org/book/9780312428501", check: "price+stock" },
+      ],
+    },
+    {
+      id: "book-sontag-regarding-the-pain-of-others",
+      name: "Regarding the Pain of Others, by Susan Sontag (Paperback)",
+      price: 18,
+      category: "Books",
+      description: "Picador paperback. Bookshop.org is out of stock, so Amazon is the place to get it.",
+      image: "https://images-us.bookshop.org/ingram/9780312422196.jpg?width=600",
+      link: "https://www.amazon.com/dp/0312422199",
+      watch: [
+        { store: "Amazon", url: "https://www.amazon.com/dp/0312422199", check: "price", method: "search" },
+        { store: "Bookshop.org", url: "https://bookshop.org/book/9780312422196", check: "price+stock" },
+      ],
+    },
+    {
       id: "book-didion-and-babitz",
       name: "Didion and Babitz, by Lili Anolik (Hardcover)",
       price: 29.99,

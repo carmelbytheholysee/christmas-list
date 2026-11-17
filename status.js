@@ -33,6 +33,11 @@ window.STATUS = {
       deal: { price: 24, store: "medicube US", link: "https://medicube.us/products/azelaic-acid-16-calming-serum" },
       stock: "in",
     },
+    "book-sontag-reborn": {
+      deal: { price: 15.10, store: "Amazon", link: "https://www.amazon.com/dp/0312428502", note: "40% off on Amazon. Bookshop.org has it for $23.30." },
+      stock: "in",
+    },
+    "book-sontag-regarding-the-pain-of-others": { stock: "in" },
     "book-infinite-jest": {
       deal: { price: 30.81, store: "Amazon", link: "https://www.amazon.com/dp/0316920045", note: "Bookshop.org has it for $37.28." },
       stock: "in",
