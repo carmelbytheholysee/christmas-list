@@ -21,6 +21,10 @@ window.STATUS = {
     "nutricost-preworkout-complex": {
       deal: { price: 27.16, store: "Amazon", link: "https://www.amazon.com/dp/B0CNKW7KFB", approx: true },
     },
+    "book-infinite-jest": {
+      deal: { price: 30.81, store: "Amazon", link: "https://www.amazon.com/dp/0316920045", note: "Bookshop.org has it for $37.28." },
+      stock: "in",
+    },
     "book-didion-and-babitz": {
       deal: { price: 27.95, store: "Bookshop.org", link: "https://bookshop.org/book/9781668065488" },
       stock: "in",

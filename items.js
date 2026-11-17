@@ -210,6 +210,20 @@ window.WISHLIST = {
       watch: [{ store: "Amazon", url: "https://www.amazon.com/dp/B07KC5DWCC", check: "price", method: "search" }],
     },
     {
+      id: "book-infinite-jest",
+      name: "Infinite Jest, by David Foster Wallace (Hardcover)",
+      price: 40,
+      category: "Books",
+      description: "Little, Brown hardcover, 1,079 pages. Amazon has it well below the $40 list price.",
+      image: "https://images-us.bookshop.org/ingram/9780316920049.jpg?width=600",
+      link: "https://www.amazon.com/dp/0316920045",
+      altLink: "https://bookshop.org/book/9780316920049",
+      watch: [
+        { store: "Amazon", url: "https://www.amazon.com/dp/0316920045", check: "price", method: "search" },
+        { store: "Bookshop.org", url: "https://bookshop.org/book/9780316920049", check: "price+stock" },
+      ],
+    },
+    {
       id: "book-didion-and-babitz",
       name: "Didion and Babitz, by Lili Anolik (Hardcover)",
       price: 29.99,
