@@ -116,21 +116,6 @@ window.WISHLIST = {
       watch: [{ store: "Amazon", url: "https://www.amazon.com/dp/B06WP6KQKH", check: "price", method: "search" }],
     },
     {
-      id: "transparent-labs-bulk-preworkout",
-      name: "Transparent Labs BULK Pre-Workout, Strawberry Lemonade, 30 Servings",
-      price: 49.99,
-      category: "Fitness",
-      description: "Strawberry Lemonade flavor, 30 servings. Transparent Labs sells it directly, and it's also on Amazon.",
-      image: "",
-      link: "https://www.transparentlabs.com/products/bulk-preworkout",
-      vendor: "Transparent Labs",
-      altLink: "https://www.amazon.com/dp/B0CJGSQ121",
-      watch: [
-        { store: "Transparent Labs", url: "https://www.transparentlabs.com/products/bulk-preworkout", check: "price+stock", variant: "Strawberry Lemonade, 30 servings" },
-        { store: "Amazon", url: "https://www.amazon.com/dp/B0CJGSQ121", check: "price", method: "search" },
-      ],
-    },
-    {
       id: "nutricost-preworkout-complex",
       name: "Nutricost Pre-Workout Complex, Blue Raspberry, 60 Servings",
       price: 31.95,

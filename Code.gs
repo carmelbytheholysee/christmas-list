@@ -61,11 +61,6 @@ const SHOPIFY_ITEMS = {
     store: 'Taylor Swift Store',
     url: 'https://store.taylorswift.com/products/lover-house-corduroy-pillow.js',
   },
-  'transparent-labs-bulk-preworkout': {
-    store: 'Transparent Labs',
-    url: 'https://www.transparentlabs.com/products/bulk-preworkout.js',
-    variant: '30 Servings / Strawberry Lemonade',
-  },
 };
 
 // Items you update by hand (e.g. from CamelCamelCamel alert emails). Listed in the Manual Prices tab.
