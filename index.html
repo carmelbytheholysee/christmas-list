@@ -345,7 +345,7 @@
           ${imgHTML(it)}
           ${isTop(it) && !taken ? `<span class="ribbon">Top pick</span>` : ""}
           ${it._sale && !taken ? `<span class="ribbon sale">${money(Math.round(it._off))} off</span>` : ""}
-          ${(it._stock === "out" || it._stock === "low") && !taken ? `<span class="stockflag">${STOCK_LABEL[it._stock]}</span>` : ""}
+          ${!taken && it.tag ? `<span class="stockflag">${esc(it.tag)}</span>` : (it._stock === "out" || it._stock === "low") && !taken ? `<span class="stockflag">${STOCK_LABEL[it._stock]}</span>` : ""}
           ${mine ? `<div class="sold mine"><span>You claimed this</span></div>` : taken ? `<div class="sold"><span>No Longer Available</span></div>` : ""}
         </button>
         <div class="body">

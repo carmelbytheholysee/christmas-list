@@ -25,6 +25,10 @@ window.STATUS = {
       deal: { price: 20, store: "Banana Republic Factory", link: "https://bananarepublicfactory.gapfactory.com/browse/product.do?pid=11765960110001&vid=1", note: "60% off." },
       stock: "in",
     },
+    "dr-melaxin-s-zinc-patch": {
+      deal: { price: 23, store: "YesStyle", link: "https://www.yesstyle.com/en/tcuc.USD/coc.US/info.html/pid.1138026078?cpid=1138026079", note: "Flash sale, ends around Nov 22." },
+      stock: "backorder",
+    },
     "book-infinite-jest": {
       deal: { price: 30.81, store: "Amazon", link: "https://www.amazon.com/dp/0316920045", note: "Bookshop.org has it for $37.28." },
       stock: "in",

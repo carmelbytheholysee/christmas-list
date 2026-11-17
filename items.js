@@ -10,6 +10,7 @@
 //  link     main store (Amazon when it exists). altLink = backup store.
 //  vendor / altVendor   optional, overrides the store name on the button.
 //  priority "top" adds a Top pick ribbon.
+//  tag      optional short label on the photo, e.g. "Backordered: order soon".
 //  watch    what the daily checker looks at (see TRACKING.md). Sales and
 //           stock it finds go into status.js, not here.
 //  shopify  { url: "<store>/products/<handle>.js", variant: "L" } for Shopify
@@ -159,6 +160,19 @@ window.WISHLIST = {
       link: "https://bananarepublicfactory.gapfactory.com/browse/product.do?pid=11765960110001&vid=1",
       vendor: "Banana Republic Factory",
       watch: [{ store: "Banana Republic Factory", url: "https://bananarepublicfactory.gapfactory.com/browse/product.do?pid=11765960110001&vid=1", check: "price+stock", variant: "Chocolate, S/M" }],
+    },
+    {
+      id: "dr-melaxin-s-zinc-patch",
+      name: "Dr.Melaxin S-Zinc Zero-Fit Ultra Thin Blemish Spot Patch (72 patches)",
+      price: 38.33,
+      category: "Skincare",
+      description:
+        "The 72-patch pack. YesStyle is out of stock and restocking in about 3 weeks, and shipping takes another 7 to 11 business days, so order early or it may arrive after Christmas.",
+      image: "https://d1flfk77wl2xk4.cloudfront.net/Assets/28/604/p0225260428.jpg",
+      link: "https://www.yesstyle.com/en/tcuc.USD/coc.US/info.html/pid.1138026078?cpid=1138026079",
+      vendor: "YesStyle",
+      tag: "Backordered: order soon",
+      watch: [{ store: "YesStyle", url: "https://www.yesstyle.com/en/tcuc.USD/coc.US/info.html/pid.1138026078", check: "price+stock", method: "search", variant: "72 patches" }],
     },
     uniqlo("09", "Black"),
     uniqlo("05", "Gray"),
