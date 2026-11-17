@@ -174,6 +174,18 @@ window.WISHLIST = {
       tag: "Backordered: order soon",
       watch: [{ store: "YesStyle", url: "https://www.yesstyle.com/en/tcuc.USD/coc.US/info.html/pid.1138026078", check: "price+stock", method: "search", variant: "72 patches" }],
     },
+    {
+      id: "medicube-azelaic-acid-16-serum",
+      name: "medicube Azelaic Acid 16 Calming Serum",
+      price: 26,
+      category: "Skincare",
+      description:
+        "16% azelaic acid serum from medicube's official US store. Sold elsewhere as the Azelaic Acid 16 BB Soothing Serum, 30ml.",
+      image: "https://cdn.shopify.com/s/files/1/0156/3905/2336/files/00_285b5a5a-20e9-44ab-a41c-05b1196738d8.jpg?v=1749431175",
+      link: "https://medicube.us/products/azelaic-acid-16-calming-serum",
+      vendor: "medicube US",
+      shopify: { url: "https://medicube.us/products/azelaic-acid-16-calming-serum.js" },
+    },
     uniqlo("09", "Black"),
     uniqlo("05", "Gray"),
     uniqlo("69", "Navy"),
