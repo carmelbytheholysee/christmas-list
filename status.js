@@ -3,11 +3,11 @@
 // stock: "in" | "low" | "out" | "backorder" | "unknown"  (for the exact variant wanted)
 // approx: true when the price came from search results instead of the store page
 window.STATUS = {
-  updated: "2026-11-16",
+  updated: "2026-11-17",
   items: {
     "apple-watch-series-12": {
       deal: { price: 329, store: "Best Buy", link: "https://www.bestbuy.com/site/6572728.p", note: "Target has it for $329.99. Apple charges the full $399." },
-      stock: "in",
+      stock: "unknown",
     },
     "ts-checker-game-towel": { stock: "in" },
     "ts-lover-house-pillow": { stock: "in" },
@@ -62,5 +62,6 @@ window.STATUS = {
       deal: { price: 16.73, store: "Bookshop.org", link: "https://bookshop.org/book/9781681370088" },
       stock: "in",
     },
+    "ethel-cain-preachers-daughter-lp": { stock: "in" },
   },
 };
