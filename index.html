@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Christmas List</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f7f3ec; --card:#fffdf9; --ink:#1f2a24; --muted:#6b736d; --line:#e4ddd0;
+    --pine:#1d4a35; --pine-2:#2a6449; --berry:#b3263c; --gold:#c99a3a;
+    --radius:14px; --shadow:0 1px 2px rgba(31,42,36,.06),0 8px 24px rgba(31,42,36,.06);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  a{color:inherit}
+  button{font:inherit;cursor:pointer}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+
+  /* header */
+  header.top{background:var(--pine);color:#f4efe4;position:relative;overflow:hidden}
+  header.top::after{content:"";position:absolute;inset:auto 0 0 0;height:6px;
+    background:repeating-linear-gradient(90deg,var(--berry) 0 18px,#f4efe4 18px 36px)}
+  .hero{padding-top:48px;padding-bottom:44px}
+  .eyebrow{font-size:12px;letter-spacing:.16em;text-transform:uppercase;opacity:.75;margin:0 0 10px}
+  h1{font-family:Fraunces,Georgia,serif;font-weight:700;font-size:clamp(32px,5vw,52px);line-height:1.05;margin:0 0 12px;letter-spacing:-.01em}
+  .intro{max-width:620px;margin:0;opacity:.9}
+  .snow{position:absolute;right:-30px;top:-20px;width:260px;opacity:.12;pointer-events:none}
+
+  .owner-bar{background:var(--gold);color:#2b2108;font-size:14px;text-align:center;padding:8px 12px}
+  .demo-bar{background:#e9e2d4;color:#4b4434;font-size:13px;text-align:center;padding:7px 12px}
+
+  /* toolbar */
+  .toolbar{position:sticky;top:0;z-index:5;background:rgba(247,243,236,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  .toolbar .wrap{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding-top:12px;padding-bottom:12px}
+  .search{flex:1 1 220px;min-width:180px;position:relative}
+  .search input{width:100%;padding:10px 12px 10px 36px;border:1px solid var(--line);border-radius:999px;background:#fff;font:inherit}
+  .search svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);opacity:.5}
+  select{padding:10px 34px 10px 14px;border:1px solid var(--line);border-radius:999px;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%231f2a24' stroke-width='1.6' fill='none'/%3E%3C/svg%3E") no-repeat right 14px center;appearance:none;font:inherit}
+  .toggle{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--muted);user-select:none}
+  .toggle input{accent-color:var(--pine);width:16px;height:16px}
+  .chips{display:flex;gap:8px;flex-wrap:wrap;padding:16px 0 4px}
+  .chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 14px;font-size:14px;color:var(--ink)}
+  .chip[aria-pressed="true"]{background:var(--pine);border-color:var(--pine);color:#fff}
+  .count{font-size:14px;color:var(--muted);padding:6px 0 0}
+
+  /* grid */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:22px;padding:18px 0 60px}
+  .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column;transition:transform .15s ease, box-shadow .15s ease}
+  .card:hover{transform:translateY(-2px);box-shadow:0 2px 4px rgba(31,42,36,.08),0 14px 30px rgba(31,42,36,.1)}
+  .thumb{all:unset;cursor:pointer;display:block;position:relative;aspect-ratio:1/1;background:#efe8db;overflow:hidden}
+  .thumb:focus-visible{outline:3px solid var(--pine);outline-offset:-3px}
+  .thumb img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .3s ease}
+  .card:hover .thumb img{transform:scale(1.04)}
+  .ph{width:100%;height:100%;display:grid;place-items:center;font-family:Fraunces,serif;font-size:64px;color:#fff}
+  .ribbon{position:absolute;top:12px;left:12px;background:var(--berry);color:#fff;font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;letter-spacing:.02em}
+  .sold{position:absolute;inset:0;background:rgba(247,243,236,.72);display:grid;place-items:center}
+  .sold span{background:var(--ink);color:#fff;font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:8px 14px;border-radius:6px}
+  .mine span{background:var(--pine)}
+  .body{padding:14px 16px 16px;display:flex;flex-direction:column;gap:6px;flex:1}
+  .cat{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+  .name{all:unset;cursor:pointer;font-weight:600;line-height:1.3}
+  .name:hover{text-decoration:underline}
+  .row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-top:auto;padding-top:8px}
+  .row .btn{white-space:nowrap}
+  .price{font-family:Fraunces,serif;font-weight:700;font-size:20px}
+  .price.na{font-family:Inter,sans-serif;font-weight:500;font-size:14px;color:var(--muted)}
+  .card.taken .price{color:var(--muted);text-decoration:line-through;text-decoration-thickness:1px}
+  .btn{border:0;border-radius:999px;padding:9px 16px;font-weight:600;font-size:14px;background:var(--pine);color:#fff}
+  .btn:hover{background:var(--pine-2)}
+  .btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+  .btn.ghost:hover{background:#fff}
+  .btn.berry{background:var(--berry)}
+  .btn[disabled]{opacity:.5;cursor:not-allowed}
+  .ribbon.sale{background:var(--gold);color:#2b2108;left:auto;right:12px}
+  .stockflag{position:absolute;bottom:12px;left:12px;background:rgba(31,42,36,.85);color:#fff;font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px}
+  .prices{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+  .was{color:var(--muted);text-decoration:line-through;font-size:14px}
+  .now.sale{color:var(--berry)}
+  .approx{font-size:12px;color:var(--muted);cursor:help}
+  .deal{background:#fbf3df;border:1px solid #efdcae;border-radius:10px;padding:10px 12px;font-size:14px}
+  .deal b{color:var(--berry)}
+  .empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:60px 0}
+
+  /* modal */
+  .scrim{position:fixed;inset:0;background:rgba(20,28,24,.5);display:none;align-items:center;justify-content:center;padding:20px;z-index:20}
+  .scrim.open{display:flex}
+  .modal{background:var(--card);border-radius:18px;max-width:860px;width:100%;max-height:92vh;overflow:auto;display:grid;grid-template-columns:1fr 1fr;box-shadow:0 30px 80px rgba(0,0,0,.25)}
+  .modal .pic{background:#efe8db;min-height:320px;position:relative}
+  .modal .pic img,.modal .pic .ph{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .modal .info{padding:28px;display:flex;flex-direction:column;gap:12px;position:relative}
+  .modal h2{font-family:Fraunces,serif;font-size:28px;line-height:1.15;margin:0}
+  .modal .desc{color:#38423c;white-space:pre-line}
+  .modal .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:auto;padding-top:12px}
+  .x{position:absolute;top:12px;right:12px;width:36px;height:36px;border-radius:50%;border:0;background:#f1ebe0;font-size:20px;line-height:1}
+  .status{font-size:14px;font-weight:600;padding:8px 12px;border-radius:8px;background:#efe8db}
+  .status.ok{background:#e1efe6;color:var(--pine)}
+  .status.no{background:#f6e1e4;color:var(--berry)}
+  .field{display:flex;flex-direction:column;gap:6px;font-size:14px}
+  .field input{padding:10px 12px;border:1px solid var(--line);border-radius:10px;font:inherit;background:#fff}
+  .small{font-size:13px;color:var(--muted)}
+  @media (max-width:720px){
+    .modal{grid-template-columns:1fr}
+    .modal .pic{min-height:0;aspect-ratio:1/1}
+    .hero{padding-top:36px;padding-bottom:34px}
+    .grid{grid-template-columns:repeat(2,1fr);gap:14px}
+    .body{padding:12px}
+    .row{flex-direction:column;align-items:flex-start}
+    .row .btn{width:100%}
+    .ph{font-size:44px}
+  }
+
+  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:12px 18px;border-radius:10px;font-size:14px;opacity:0;transition:.25s;z-index:30;pointer-events:none}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  footer{text-align:center;color:var(--muted);font-size:13px;padding:0 0 40px}
+</style>
+</head>
+<body>
+
+<div id="ownerBar" class="owner-bar" hidden>Owner view: every item shows as available to you, so claims stay a surprise. <a href="?guest">See the guest view</a></div>
+<div id="demoBar" class="demo-bar" hidden>Preview mode: claims are saved only in this browser until the shared backend is connected.</div>
+
+<header class="top">
+  <svg class="snow" viewBox="0 0 100 100" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round">
+    <g transform="translate(50 50)">
+      <g id="arm"><line y2="-44"/><line y1="-28" x2="-10" y2="-38"/><line y1="-28" x2="10" y2="-38"/><line y1="-14" x2="-8" y2="-22"/><line y1="-14" x2="8" y2="-22"/></g>
+      <use href="#arm" transform="rotate(60)"/><use href="#arm" transform="rotate(120)"/><use href="#arm" transform="rotate(180)"/><use href="#arm" transform="rotate(240)"/><use href="#arm" transform="rotate(300)"/>
+    </g>
+  </svg>
+  <div class="wrap hero">
+    <p class="eyebrow">Christmas <span id="year"></span></p>
+    <h1 id="title">Christmas List</h1>
+    <p class="intro" id="intro"></p>
+  </div>
+</header>
+
+<div class="toolbar">
+  <div class="wrap">
+    <label class="search">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="q" type="search" placeholder="Search the list" aria-label="Search the list">
+    </label>
+    <select id="sort" aria-label="Sort">
+      <option value="featured">Sort: Featured</option>
+      <option value="price-asc">Price: low to high</option>
+      <option value="price-desc">Price: high to low</option>
+      <option value="name">Name: A to Z</option>
+    </select>
+    <label class="toggle" id="hideWrap"><input id="hideTaken" type="checkbox"> Hide unavailable</label>
+  </div>
+</div>
+
+<main class="wrap">
+  <div class="chips" id="chips"></div>
+  <div class="count" id="count"></div>
+  <section class="grid" id="grid" aria-live="polite"></section>
+</main>
+<footer id="foot">Made with love (and a little code).</footer>
+
+<div class="scrim" id="scrim" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+  <div class="modal" id="modal"></div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script src="items.js"></script>
+<script src="status.js" onerror="window.STATUS={items:{}}"></script>
+<script>
+(() => {
+  const cfg = window.WISHLIST || { items: [] };
+  const API = (window.CLAIMS_API || "").trim();
+  const STATUS = (window.STATUS && window.STATUS.items) || {};
+  // Combine items.js, status.js (daily checker), and the Google Sheet's price tabs.
+  // Sheet prices are exact (store data, or a price Stewart typed in), so they beat search-based guesses.
+  let sheetPrices = {};
+  let items = [];
+  function derive() {
+    items = cfg.items.map((it, i) => {
+      const st = STATUS[it.id] || {};
+      const sp = sheetPrices[it.id];
+      let deal = st.deal || null, stock = st.stock || "unknown", regular = it.price;
+      let approx = !!it.approx;
+      if (sp && sp.price) {
+        if (deal && (deal.approx || deal.store === sp.store)) deal = null;
+        if (sp.was && (regular == null || sp.was > regular)) regular = sp.was;
+        const link = sp.store === "Amazon" ? it.link
+          : (it.altLink && vendorName(it.altLink, it.altVendor) === sp.store) ? it.altLink : it.link;
+        const sd = { price: sp.price, store: sp.store, link, checked: sp.checked, manual: sp.source === "manual" };
+        if (!deal || sp.price <= deal.price) { deal = sd; stock = sp.stock || "in"; }
+        if (regular == null) regular = sp.price;
+        approx = false;
+      } else if (sp && sp.stock === "out") {
+        stock = "out";
+      }
+      if (deal && deal.approx) approx = true;
+      const useDeal = deal && (regular == null || deal.price < regular) ? deal : null;
+      const now = useDeal ? useDeal.price : regular;
+      const off = useDeal && regular != null ? regular - useDeal.price : 0;
+      const onSale = off > 0 && (off >= 10 || off / regular >= 0.1);
+      const shown = useDeal || (sp && sp.price ? { checked: sp.checked, manual: sp.source === "manual", store: sp.store, quiet: true } : null);
+      return { ...it, price: regular, _order: i, _deal: useDeal, _shown: shown, _now: now, _off: off, _sale: onSale,
+        _stock: stock, _approx: approx };
+    });
+  }
+  derive();
+  const $ = (s) => document.querySelector(s);
+
+  // ---- storage helpers (never let storage errors break the page) ----
+  const store = {
+    get(k, d) { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch { return d; } },
+    set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} },
+    del(k) { try { localStorage.removeItem(k); } catch {} },
+  };
+
+  // ---- owner mode: visit the site once with ?owner to turn it on ----
+  const params = new URLSearchParams(location.search);
+  if (params.has("owner")) store.set("xmas_owner", true);
+  if (params.has("guest")) store.del("xmas_owner");
+  if (params.has("owner") || params.has("guest")) history.replaceState(null, "", location.pathname);
+  const isOwner = store.get("xmas_owner", false) === true;
+
+  let claimed = new Set();
+  let myClaims = store.get("xmas_my_claims", {}); // { itemId: token }
+  const state = { q: "", sort: "featured", cat: "All", hideTaken: false };
+  const STOCK_LABEL = { out: "Sold out at store", backorder: "Backordered", low: "Low stock" };
+
+  // ---- header ----
+  document.title = cfg.title || "Christmas List";
+  $("#title").textContent = cfg.title || "Christmas List";
+  $("#intro").textContent = cfg.intro || "";
+  $("#year").textContent = new Date().getFullYear();
+  $("#ownerBar").hidden = !isOwner;
+  $("#demoBar").hidden = !!API || isOwner;
+  if (isOwner) $("#hideWrap").style.display = "none";
+
+  // ---- helpers ----
+  const money = (p) => p == null ? null :
+    new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", minimumFractionDigits: p % 1 ? 2 : 0 }).format(p);
+  const palette = ["#1d4a35", "#b3263c", "#2a6449", "#8a5a2b", "#3d5a80", "#7a3b5d"];
+  const phColor = (s) => palette[[...s].reduce((a, c) => a + c.charCodeAt(0), 0) % palette.length];
+  const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const isTaken = (id) => !isOwner && claimed.has(id);
+  const isMine = (id) => !isOwner && !!myClaims[id] && claimed.has(id);
+  const token = () => (crypto.randomUUID ? crypto.randomUUID() : String(Math.random()).slice(2) + Date.now());
+
+  function priceHTML(it) {
+    if (it._now == null) return `<span class="price na">Price varies</span>`;
+    const tip = `title="Approximate. Store prices change often, so check the listing."`;
+    const ap = it._approx ? `<span class="approx" ${tip}>approx.</span>` : "";
+    if (it._sale) return `<span class="prices"><span class="price now sale">${money(it._now)}</span><span class="was">${money(it.price)}</span>${ap}</span>`;
+    return `<span class="prices"><span class="price">${money(it.price ?? it._now)}</span>${ap}</span>`;
+  }
+
+  function imgHTML(it) {
+    const label = (it.name || "?").replace(/^Sample:\s*/, "").trim().charAt(0).toUpperCase();
+    const ph = `<div class="ph" style="background:${phColor(it.id)}">${esc(label)}</div>`;
+    if (!it.image) return ph;
+    return `<img src="${esc(it.image)}" alt="${esc(it.name)}" loading="lazy" referrerpolicy="no-referrer"
+      onerror="this.outerHTML=this.dataset.ph" data-ph='${ph.replace(/'/g, "&#39;")}'>`;
+  }
+
+  function toast(msg) {
+    const t = $("#toast"); t.textContent = msg; t.classList.add("show");
+    clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove("show"), 2600);
+  }
+
+  // ---- claims backend ----
+  async function fetchClaims() {
+    if (!API) { claimed = new Set(Object.keys(store.get("xmas_demo_claims", {}))); return; }
+    try {
+      const r = await fetch(API + (API.includes("?") ? "&" : "?") + "t=" + Date.now());
+      const d = await r.json();
+      claimed = new Set(d.claimed || []);
+      if (d.prices && typeof d.prices === "object") { sheetPrices = d.prices; derive(); renderChips(); }
+    } catch (e) { console.warn("Could not load claims", e); }
+  }
+
+  async function send(action, id, extra = {}) {
+    if (!API) {
+      const demo = store.get("xmas_demo_claims", {});
+      if (action === "claim") { if (demo[id]) return { ok: false, reason: "taken" }; demo[id] = 1; }
+      else delete demo[id];
+      store.set("xmas_demo_claims", demo);
+      return { ok: true, claimed: Object.keys(demo) };
+    }
+    const r = await fetch(API, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" }, // avoids a CORS preflight
+      body: JSON.stringify({ action, id, ...extra }),
+    });
+    return r.json();
+  }
+
+  // ---- render grid ----
+  function filtered() {
+    const q = state.q.toLowerCase();
+    let list = items.filter((it) =>
+      (state.cat === "All" || (state.cat === "On sale" ? it._sale : it.category === state.cat)) &&
+      (!q || [it.name, it.description, it.category].join(" ").toLowerCase().includes(q)) &&
+      !(state.hideTaken && isTaken(it.id) && !isMine(it.id)));
+    const priceKey = (it, dir) => it._now == null ? (dir > 0 ? 1e9 : -1e9) : it._now;
+    const by = {
+      featured: (a, b) => (b.priority === "top") - (a.priority === "top") || a._order - b._order,
+      "price-asc": (a, b) => priceKey(a, 1) - priceKey(b, 1),
+      "price-desc": (a, b) => priceKey(b, -1) - priceKey(a, -1),
+      name: (a, b) => a.name.localeCompare(b.name),
+    }[state.sort];
+    // available items first, then whatever sort was chosen
+    return list.sort((a, b) => (isTaken(a.id) && !isMine(a.id)) - (isTaken(b.id) && !isMine(b.id)) || by(a, b));
+  }
+
+  function renderChips() {
+    const cats = ["All", ...(items.some((i) => i._sale) ? ["On sale"] : []), ...new Set(items.map((i) => i.category).filter(Boolean))];
+    $("#chips").innerHTML = cats.length > 2 ? cats.map((c) =>
+      `<button class="chip" aria-pressed="${c === state.cat}" data-cat="${esc(c)}">${esc(c)}</button>`).join("") : "";
+  }
+
+  function render() {
+    const list = filtered();
+    const avail = items.filter((i) => !isTaken(i.id)).length;
+    $("#count").textContent = isOwner ? `${items.length} items on your list`
+      : `${avail} of ${items.length} items still available`;
+    if (!list.length) { $("#grid").innerHTML = `<div class="empty">Nothing matches that. Try clearing the search.</div>`; return; }
+    $("#grid").innerHTML = list.map((it) => {
+      const taken = isTaken(it.id), mine = isMine(it.id);
+      let btn;
+      if (isOwner) btn = "";
+      else if (mine) btn = `<button class="btn ghost" data-open="${esc(it.id)}">You're getting this</button>`;
+      else if (taken) btn = "";
+      else btn = `<button class="btn" data-open="${esc(it.id)}" data-intent="claim">I'm getting this</button>`;
+      return `<article class="card ${taken && !mine ? "taken" : ""}">
+        <button class="thumb" data-open="${esc(it.id)}" aria-label="View ${esc(it.name)}">
+          ${imgHTML(it)}
+          ${it.priority === "top" && !taken ? `<span class="ribbon">Top pick</span>` : ""}
+          ${it._sale && !taken ? `<span class="ribbon sale">${money(Math.round(it._off))} off</span>` : ""}
+          ${(it._stock === "out" || it._stock === "low") && !taken ? `<span class="stockflag">${STOCK_LABEL[it._stock]}</span>` : ""}
+          ${mine ? `<div class="sold mine"><span>You claimed this</span></div>` : taken ? `<div class="sold"><span>No Longer Available</span></div>` : ""}
+        </button>
+        <div class="body">
+          ${it.category ? `<div class="cat">${esc(it.category)}</div>` : ""}
+          <button class="name" data-open="${esc(it.id)}">${esc(it.name)}</button>
+          <div class="row">
+            ${priceHTML(it)}
+            ${btn}
+          </div>
+        </div>
+      </article>`;
+    }).join("");
+  }
+
+  // ---- store links: label each button with the vendor's name ----
+  const VENDORS = { amazon:"Amazon", "a.co":"Amazon", target:"Target", walmart:"Walmart", bestbuy:"Best Buy",
+    etsy:"Etsy", ebay:"eBay", apple:"Apple", nike:"Nike", rei:"REI", uniqlo:"Uniqlo", barnesandnoble:"Barnes & Noble",
+    bookshop:"Bookshop.org", sephora:"Sephora", ulta:"Ulta", costco:"Costco", lululemon:"Lululemon", patagonia:"Patagonia",
+    kohls:"Kohl's", macys:"Macy's", nordstrom:"Nordstrom", adorama:"Adorama", bhphotovideo:"B&H Photo", keh:"KEH" };
+  function vendorName(url, override) {
+    if (override) return override;
+    try {
+      const host = new URL(url).hostname.replace(/^www\./, "");
+      for (const k in VENDORS) if (host === k || host.startsWith(k + ".") || host.includes("." + k + ".")) return VENDORS[k];
+      const base = host.split(".").slice(-2, -1)[0] || host;
+      return base.charAt(0).toUpperCase() + base.slice(1);
+    } catch { return "the store"; }
+  }
+  function storeLinks(it) {
+    const out = [];
+    const mk = (url, name, primary) => {
+      const v = vendorName(url, name);
+      const verb = v === "Amazon" || v === "Etsy" || v === "eBay" ? "on" : "at";
+      return `<a class="btn ${primary ? "" : "ghost"}" style="text-decoration:none" href="${esc(url)}" target="_blank" rel="noopener">Buy ${verb} ${esc(v)} ↗</a>`;
+    };
+    if (it.link) out.push(mk(it.link, it.vendor, true));
+    if (it.altLink) out.push(mk(it.altLink, it.altVendor, false));
+    return out.length ? `<div style="display:flex;gap:8px;flex-wrap:wrap">${out.join("")}</div>` : "";
+  }
+
+  function dealHTML(it) {
+    const d = it._deal, bits = [];
+    if (d) {
+      const where = d.link ? `<a href="${esc(d.link)}" target="_blank" rel="noopener">${esc(d.store)}</a>` : esc(d.store);
+      bits.push(it._off > 0
+        ? `<b>${money(d.price)}</b> at ${where}${it.price != null ? ` (regular ${money(it.price)})` : ""}${d.approx ? ", approximate" : ""}.`
+        : `About <b>${money(d.price)}</b> at ${where}.`);
+      if (d.note) bits.push(esc(d.note));
+    }
+    if (STOCK_LABEL[it._stock]) bits.push(`Stock${d && d.store ? ` at ${esc(d.store)}` : ""}: ${STOCK_LABEL[it._stock].toLowerCase()}${it._stock === "out" ? ". You can still claim it if you find it elsewhere" : ""}.`);
+    if (it._approx && !d) bits.push("Price is approximate. Check the listing for today's price.");
+    const sh = it._shown;
+    if (sh && sh.quiet && !bits.length) bits.push(sh.manual ? `${esc(sh.store)} price, entered by hand.` : `${esc(sh.store)} price checked${it._stock === "in" ? ", in stock" : ""}.`);
+    if (!bits.length) return "";
+    const date = sh && sh.checked ? sh.checked : window.STATUS && window.STATUS.updated;
+    const when = date ? ` <span class="small">${sh && sh.manual ? "Price seen" : "Checked"} ${esc(date)}.</span>` : "";
+    return `<div class="deal">${bits.join(" ")}${when}</div>`;
+  }
+
+  // ---- detail modal ----
+  let openId = null;
+  function openModal(id, intent) {
+    const it = items.find((i) => i.id === id); if (!it) return;
+    openId = id;
+    const taken = isTaken(id), mine = isMine(id);
+    let status = "", actions = "";
+    if (isOwner) {
+      status = `<div class="status">This is your list. Claims are hidden from you.</div>`;
+    } else if (mine) {
+      status = `<div class="status ok">You're getting this one. Everyone else sees it as No Longer Available.</div>`;
+      actions = `<button class="btn ghost" id="unclaim">Changed my mind, release it</button>`;
+    } else if (taken) {
+      status = `<div class="status no">No Longer Available. Someone is already getting this.</div>`;
+    } else {
+      actions = `
+        <label class="field">Your name (optional, only Stewart sees it, after Christmas)
+          <input id="claimName" maxlength="60" placeholder="e.g., Aunt Carol" value="${esc(store.get("xmas_name", ""))}">
+        </label>
+        <button class="btn berry" id="claim">I'm getting this</button>
+        <p class="small" style="margin:0;width:100%">It will show as No Longer Available to everyone else. You can release it later from this same device.</p>`;
+    }
+    $("#modal").innerHTML = `
+      <div class="pic">${imgHTML(it)}</div>
+      <div class="info">
+        <button class="x" id="close" aria-label="Close">×</button>
+        ${it.category ? `<div class="cat">${esc(it.category)}</div>` : ""}
+        <h2 id="mTitle">${esc(it.name)}</h2>
+        ${priceHTML(it)}
+        ${dealHTML(it)}
+        ${it.description ? `<div class="desc">${esc(it.description)}</div>` : ""}
+        ${storeLinks(it)}
+        ${status}
+        <div class="actions">${actions}</div>
+      </div>`;
+    $("#scrim").classList.add("open");
+    document.body.style.overflow = "hidden";
+    (intent === "claim" && $("#claimName") ? $("#claimName") : $("#close")).focus();
+  }
+  function closeModal() { $("#scrim").classList.remove("open"); document.body.style.overflow = ""; openId = null; }
+
+  async function doClaim() {
+    const btn = $("#claim"); btn.disabled = true; btn.textContent = "Saving…";
+    const name = ($("#claimName").value || "").trim();
+    store.set("xmas_name", name);
+    const tk = token();
+    try {
+      const res = await send("claim", openId, { name, token: tk });
+      if (res.claimed) claimed = new Set(res.claimed);
+      if (res.ok) {
+        myClaims[openId] = tk; store.set("xmas_my_claims", myClaims);
+        toast("Done. It's yours to give.");
+      } else {
+        toast("Someone claimed this a moment ago.");
+      }
+    } catch (e) {
+      toast("Couldn't save. Check your connection and try again.");
+    }
+    render(); openModal(openId);
+  }
+
+  async function doUnclaim() {
+    const btn = $("#unclaim"); btn.disabled = true; btn.textContent = "Releasing…";
+    try {
+      const res = await send("unclaim", openId, { token: myClaims[openId] });
+      if (res.claimed) claimed = new Set(res.claimed);
+      if (res.ok) { delete myClaims[openId]; store.set("xmas_my_claims", myClaims); toast("Released. It's back on the list."); }
+      else toast("Couldn't release it from this device.");
+    } catch { toast("Couldn't save. Check your connection and try again."); }
+    render(); openModal(openId);
+  }
+
+  // ---- events ----
+  document.addEventListener("click", (e) => {
+    const t = e.target;
+    const open = t.closest("[data-open]");
+    if (open) { openModal(open.dataset.open, open.dataset.intent); return; }
+    const chip = t.closest("[data-cat]");
+    if (chip) { state.cat = chip.dataset.cat; renderChips(); render(); return; }
+    if (t.id === "close" || t === $("#scrim")) closeModal();
+    if (t.id === "claim") doClaim();
+    if (t.id === "unclaim") doUnclaim();
+  });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && openId) closeModal(); });
+  $("#q").addEventListener("input", (e) => { state.q = e.target.value; render(); });
+  $("#sort").addEventListener("change", (e) => { state.sort = e.target.value; render(); });
+  $("#hideTaken").addEventListener("change", (e) => { state.hideTaken = e.target.checked; render(); });
+
+  // keep claims fresh while people browse
+  const refresh = async () => { await fetchClaims(); render(); if (openId) openModal(openId); };
+  setInterval(() => { if (!document.hidden && !openId) refresh(); }, 30000);
+  document.addEventListener("visibilitychange", () => { if (!document.hidden && !openId) refresh(); });
+
+  if (window.STATUS && window.STATUS.updated) $("#foot").textContent = `Prices and stock last checked ${window.STATUS.updated}.`;
+  renderChips(); render();
+  refresh();
+})();
+</script>
+</body>
+</html>
