@@ -11,6 +11,10 @@ window.STATUS = {
     },
     "ts-checker-game-towel": { stock: "in" },
     "ts-lover-house-pillow": { stock: "in" },
+    "ts-ttpd-beige-hoodie": {
+      deal: { price: 65.25, store: "Taylor Swift Store", link: "https://store.taylorswift.com/products/the-tortured-poets-department-beige-hoodie?variant=43295303729352" },
+      stock: "in",
+    },
     "nutricost-multivitamin-men": {
       deal: { price: 12.71, store: "Amazon", link: "https://www.amazon.com/dp/B06WP6KQKH", approx: true },
     },

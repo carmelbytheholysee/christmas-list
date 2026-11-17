@@ -1,0 +1,50 @@
+{
+  "ts-checker-game-towel": {
+    "store": "Taylor Swift Store",
+    "url": "https://store.taylorswift.com/products/taylor-swift-checker-game-towel.js"
+  },
+  "ts-lover-house-pillow": {
+    "store": "Taylor Swift Store",
+    "url": "https://store.taylorswift.com/products/lover-house-corduroy-pillow.js"
+  },
+  "ts-ttpd-beige-hoodie": {
+    "store": "Taylor Swift Store",
+    "url": "https://store.taylorswift.com/products/the-tortured-poets-department-beige-hoodie.js",
+    "variant": "L"
+  },
+  "ts-speak-now-tour-hoodie": {
+    "store": "Taylor Swift Store",
+    "url": "https://store.taylorswift.com/products/hoodie.js",
+    "variant": "L"
+  },
+  "ts-cowboy-like-me-jogger": {
+    "store": "Taylor Swift Store",
+    "url": "https://store.taylorswift.com/products/cowboy-like-me-jogger.js",
+    "variant": "L"
+  },
+  "ts-fearless-tv-sweatpants": {
+    "store": "Taylor Swift Store",
+    "url": "https://store.taylorswift.com/products/fearless-taylor-s-version-sweatpants.js",
+    "variant": "L"
+  },
+  "audrey-hobert-tour-2026-poster": {
+    "store": "Audrey Hobert Store",
+    "url": "https://shop.audreyhobert.net/products/tour-2026-poster.js"
+  },
+  "audrey-hobert-navy-hat": {
+    "store": "Audrey Hobert Store",
+    "url": "https://shop.audreyhobert.net/products/audrey-hobert-logo-navy-hat.js"
+  },
+  "lorde-virgin-bathwater-lp": {
+    "store": "Lorde Store",
+    "url": "https://lorde.store/products/virgin-bathwater-lp.js"
+  },
+  "lana-nfr-black-vinyl": {
+    "store": "Lana Del Rey Store",
+    "url": "https://shoplanadelrey.com/products/nfr-black-vinyl.js"
+  },
+  "ethel-cain-willoughby-tucker-lp": {
+    "store": "Pale Blue Dot Records",
+    "url": "https://palebluedotrecords.com/products/willoughby_tucker_ill_always_love_you_jothj0pt.js"
+  }
+}

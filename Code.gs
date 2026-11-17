@@ -50,6 +50,7 @@ function doGet() {
  *  PRICES: free daily store checks + prices you type in by hand
  * ================================================================ */
 
+// Backup list, used only if shopify.json on the site can't be loaded.
 // Shopify stores publish product data at <product link>.js. Each entry:
 // site item id → that URL, plus the exact variant title when the product has options.
 const SHOPIFY_ITEMS = {
@@ -79,10 +80,25 @@ const TZ = 'America/New_York';
 
 function today_() { return Utilities.formatDate(new Date(), TZ, 'yyyy-MM-dd'); }
 
+// The site publishes its own list of Shopify items, so new items need no changes here.
+const SITE_SHOPIFY_LIST = 'https://carmelbytheholysee.github.io/christmas-list/shopify.json';
+
+function shopifyItems_() {
+  try {
+    const res = UrlFetchApp.fetch(SITE_SHOPIFY_LIST + '?t=' + Date.now(), { muteHttpExceptions: true });
+    if (res.getResponseCode() === 200) {
+      const list = JSON.parse(res.getContentText());
+      if (list && Object.keys(list).length) return list;
+    }
+  } catch (err) { console.log('Using built-in list: ' + err); }
+  return SHOPIFY_ITEMS; // fallback if the site can't be reached
+}
+
 /** Runs every morning (see setupDailyChecks). Reads each Shopify product and writes the Store Prices tab. */
 function updateStorePrices() {
-  const rows = Object.keys(SHOPIFY_ITEMS).map(id => {
-    const cfg = SHOPIFY_ITEMS[id];
+  const items = shopifyItems_();
+  const rows = Object.keys(items).map(id => {
+    const cfg = items[id];
     try {
       const res = UrlFetchApp.fetch(cfg.url, { muteHttpExceptions: true, followRedirects: true });
       if (res.getResponseCode() === 404) return [id, cfg.store, '', '', 'out', today_(), 'product page removed'];

@@ -18,6 +18,6 @@ A scheduled Claude task runs once a day and follows these steps. It only ever re
 
 ## Limits
 
-- The Google Sheet handles the Taylor Swift Store and Transparent Labs on its own every morning (Shopify product data) and holds Stewart's hand-entered Amazon prices. The site prefers those sheet prices over anything in `status.js`, so this task can skip those stores and any `store: "Amazon"` watch entry for items in the Manual Prices tab.
+- The Google Sheet handles every item with a `shopify` field in `items.js` on its own every morning (listed in `shopify.json`) and holds Stewart's hand-entered Amazon prices. The site prefers those sheet prices over anything in `status.js`, so this task can skip those stores and any `store: "Amazon"` watch entry for items in the Manual Prices tab.
 - Amazon blocks AI agents from reading its pages. For Amazon items without a hand-entered price, use search results, which can lag by a day or more. The site labels these "approx."
 - The checker never touches `items.js`, never claims anything, and never buys anything.
