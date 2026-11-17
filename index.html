@@ -30,6 +30,11 @@
   .snow{position:absolute;right:-30px;top:-20px;width:260px;opacity:.12;pointer-events:none}
 
   .owner-bar{background:var(--gold);color:#2b2108;font-size:14px;text-align:center;padding:8px 12px}
+  .pinform{display:inline-flex;gap:6px;align-items:center;margin-left:8px}
+  .pinform input{padding:4px 8px;border:1px solid #a8822c;border-radius:6px;font:inherit;width:7em;background:#fffaf0}
+  .pinform .btn{padding:4px 12px;font-size:13px;border-color:#a8822c}
+  .star{border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 14px;font-weight:600;font-size:14px;color:var(--ink);white-space:nowrap}
+  .star[aria-pressed="true"]{background:var(--berry);border-color:var(--berry);color:#fff}
   .demo-bar{background:#e9e2d4;color:#4b4434;font-size:13px;text-align:center;padding:7px 12px}
 
   /* toolbar */
@@ -119,7 +124,10 @@
 </head>
 <body>
 
-<div id="ownerBar" class="owner-bar" hidden>Owner view: every item shows as available to you, so claims stay a surprise. <a href="?guest">See the guest view</a></div>
+<div id="ownerBar" class="owner-bar" hidden>Owner view: every item shows as available to you, so claims stay a surprise. Tap ☆ on any item to make it a Top pick. <a href="?guest">See the guest view</a>
+  <form id="pinForm" class="pinform"><label>Owner PIN <input id="pin" type="password" inputmode="numeric" autocomplete="off" size="8"></label> <button class="btn ghost" type="submit">Save</button></form>
+  <span id="pinSaved" hidden>PIN saved on this device. <a href="#" id="pinChange">Change</a></span>
+</div>
 <div id="demoBar" class="demo-bar" hidden>Preview mode: claims are saved only in this browser until the shared backend is connected.</div>
 
 <header class="top">
@@ -223,6 +231,8 @@
   let claimed = new Set();
   let myClaims = store.get("xmas_my_claims", {}); // { itemId: token }
   const state = { q: "", sort: "featured", cat: "All", hideTaken: false };
+  let topOverride = {};
+  const isTop = (it) => (it.id in topOverride ? topOverride[it.id] : it.priority === "top");
   const STOCK_LABEL = { out: "Sold out at store", backorder: "Backordered", low: "Low stock" };
 
   // ---- header ----
@@ -267,12 +277,13 @@
 
   // ---- claims backend ----
   async function fetchClaims() {
-    if (!API) { claimed = new Set(Object.keys(store.get("xmas_demo_claims", {}))); return; }
+    if (!API) { claimed = new Set(Object.keys(store.get("xmas_demo_claims", {}))); topOverride = store.get("xmas_demo_top", {}); return; }
     try {
       const r = await fetch(API + (API.includes("?") ? "&" : "?") + "t=" + Date.now());
       const d = await r.json();
       claimed = new Set(d.claimed || []);
       if (d.prices && typeof d.prices === "object") { sheetPrices = d.prices; derive(); renderChips(); }
+      if (d.topPicks && typeof d.topPicks === "object") topOverride = d.topPicks;
     } catch (e) { console.warn("Could not load claims", e); }
   }
 
@@ -301,7 +312,7 @@
       !(state.hideTaken && isTaken(it.id) && !isMine(it.id)));
     const priceKey = (it, dir) => it._now == null ? (dir > 0 ? 1e9 : -1e9) : it._now;
     const by = {
-      featured: (a, b) => (b.priority === "top") - (a.priority === "top") || a._order - b._order,
+      featured: (a, b) => isTop(b) - isTop(a) || a._order - b._order,
       "price-asc": (a, b) => priceKey(a, 1) - priceKey(b, 1),
       "price-desc": (a, b) => priceKey(b, -1) - priceKey(a, -1),
       name: (a, b) => a.name.localeCompare(b.name),
@@ -325,14 +336,14 @@
     $("#grid").innerHTML = list.map((it) => {
       const taken = isTaken(it.id), mine = isMine(it.id);
       let btn;
-      if (isOwner) btn = "";
+      if (isOwner) btn = starHTML(it);
       else if (mine) btn = `<button class="btn ghost" data-open="${esc(it.id)}">You're getting this</button>`;
       else if (taken) btn = "";
       else btn = `<button class="btn" data-open="${esc(it.id)}" data-intent="claim">I'm getting this</button>`;
       return `<article class="card ${taken && !mine ? "taken" : ""}">
         <button class="thumb" data-open="${esc(it.id)}" aria-label="View ${esc(it.name)}">
           ${imgHTML(it)}
-          ${it.priority === "top" && !taken ? `<span class="ribbon">Top pick</span>` : ""}
+          ${isTop(it) && !taken ? `<span class="ribbon">Top pick</span>` : ""}
           ${it._sale && !taken ? `<span class="ribbon sale">${money(Math.round(it._off))} off</span>` : ""}
           ${(it._stock === "out" || it._stock === "low") && !taken ? `<span class="stockflag">${STOCK_LABEL[it._stock]}</span>` : ""}
           ${mine ? `<div class="sold mine"><span>You claimed this</span></div>` : taken ? `<div class="sold"><span>No Longer Available</span></div>` : ""}
@@ -375,6 +386,40 @@
     return out.length ? `<div style="display:flex;gap:8px;flex-wrap:wrap">${out.join("")}</div>` : "";
   }
 
+  function starHTML(it) {
+    const on = isTop(it);
+    return `<button class="star" data-star="${esc(it.id)}" aria-pressed="${on}">${on ? "★ Top pick" : "☆ Make top pick"}</button>`;
+  }
+
+  const getPin = () => store.get("xmas_owner_pin", "");
+  function showPinState() {
+    const has = !!getPin();
+    $("#pinForm").hidden = has; $("#pinSaved").hidden = !has;
+  }
+  async function toggleTop(id) {
+    const it = items.find((i) => i.id === id); if (!it) return;
+    const next = !isTop(it), prev = id in topOverride ? topOverride[id] : undefined;
+    if (!API) {
+      topOverride[id] = next; store.set("xmas_demo_top", topOverride);
+      render(); if (openId) openModal(openId); return;
+    }
+    const pin = getPin();
+    if (!pin) { toast("Enter your owner PIN in the gold bar first."); $("#pin").focus(); return; }
+    topOverride[id] = next; render(); if (openId) openModal(openId); // show it right away
+    let res = null;
+    try { res = await send("setTop", id, { top: next, pin }); } catch {}
+    if (res && res.ok) {
+      if (res.topPicks) topOverride = res.topPicks;
+      toast(next ? "Marked as a Top pick for everyone." : "Top pick removed.");
+    } else {
+      if (prev === undefined) delete topOverride[id]; else topOverride[id] = prev;
+      if (res && res.reason === "wrong-pin") { store.del("xmas_owner_pin"); showPinState(); toast("That PIN didn't match. Enter it again."); }
+      else if (res && res.reason === "no-pin-set") toast("Add OWNER_PIN in Apps Script's Script Properties first.");
+      else toast("Couldn't save. Check your connection and try again.");
+    }
+    render(); if (openId) openModal(openId);
+  }
+
   function dealHTML(it) {
     const d = it._deal, bits = [];
     if (d) {
@@ -403,6 +448,7 @@
     let status = "", actions = "";
     if (isOwner) {
       status = `<div class="status">This is your list. Claims are hidden from you.</div>`;
+      actions = starHTML(it);
     } else if (mine) {
       status = `<div class="status ok">You're getting this one. Everyone else sees it as No Longer Available.</div>`;
       actions = `<button class="btn ghost" id="unclaim">Changed my mind, release it</button>`;
@@ -469,6 +515,8 @@
   // ---- events ----
   document.addEventListener("click", (e) => {
     const t = e.target;
+    const star = t.closest("[data-star]");
+    if (star) { toggleTop(star.dataset.star); return; }
     const open = t.closest("[data-open]");
     if (open) { openModal(open.dataset.open, open.dataset.intent); return; }
     const chip = t.closest("[data-cat]");
@@ -488,6 +536,14 @@
   document.addEventListener("visibilitychange", () => { if (!document.hidden && !openId) refresh(); });
 
   if (window.STATUS && window.STATUS.updated) $("#foot").textContent = `Prices and stock last checked ${window.STATUS.updated}.`;
+  $("#pinForm").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const v = $("#pin").value.trim(); if (!v) return;
+    store.set("xmas_owner_pin", v); $("#pin").value = ""; showPinState(); toast("PIN saved on this device.");
+  });
+  $("#pinChange").addEventListener("click", (e) => { e.preventDefault(); store.del("xmas_owner_pin"); showPinState(); $("#pin").focus(); });
+  showPinState();
+
   renderChips(); render();
   refresh();
 })();

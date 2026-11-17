@@ -8,7 +8,7 @@
  * just flips the status, so you keep a full history for thank-you notes.
  *
  * The public GET only returns which item ids are taken (never names), plus the
- * "Store Prices" and "Manual Prices" tabs, which hold no personal information.
+ * "Store Prices", "Manual Prices", and "Top Picks" tabs, which hold no personal information.
  */
 
 const TAB = 'Claims';
@@ -43,7 +43,7 @@ function json_(obj) {
 }
 
 function doGet() {
-  return json_({ claimed: claimedIds_(), prices: prices_() });
+  return json_({ claimed: claimedIds_(), prices: prices_(), topPicks: topPicks_() });
 }
 
 /* ================================================================
@@ -172,6 +172,46 @@ function setupDailyChecks() {
   console.log('Store Prices updated; daily check ' + (exists ? 'was already' : 'is now') + ' scheduled for ~6 a.m. Eastern.');
 }
 
+/* ================================================================
+ *  TOP PICKS: set from the site's owner view, protected by a PIN.
+ *  Set the PIN in Project Settings → Script Properties as OWNER_PIN.
+ * ================================================================ */
+const TOP_TAB = 'Top Picks';
+
+function topSheet_() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  let sh = ss.getSheetByName(TOP_TAB);
+  if (!sh) {
+    sh = ss.insertSheet(TOP_TAB);
+    sh.appendRow(['itemId', 'topPick', 'changed']);
+    sh.setFrozenRows(1);
+  }
+  return sh;
+}
+
+function topPicks_() {
+  const sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(TOP_TAB);
+  if (!sh || sh.getLastRow() < 2) return {};
+  const out = {};
+  sh.getRange(2, 1, sh.getLastRow() - 1, 2).getValues().forEach(r => {
+    if (r[0]) out[String(r[0])] = r[1] === true || String(r[1]).toUpperCase() === 'TRUE';
+  });
+  return out;
+}
+
+function setTop_(id, top, pin) {
+  const expected = PropertiesService.getScriptProperties().getProperty('OWNER_PIN');
+  if (!expected) return json_({ ok: false, reason: 'no-pin-set' });
+  if (!id || pin !== expected) return json_({ ok: false, reason: 'wrong-pin' });
+  const sh = topSheet_();
+  const n = sh.getLastRow();
+  const ids = n > 1 ? sh.getRange(2, 1, n - 1, 1).getValues().map(r => String(r[0])) : [];
+  const i = ids.indexOf(id);
+  if (i >= 0) sh.getRange(i + 2, 2, 1, 2).setValues([[top, new Date()]]);
+  else sh.appendRow([id, top, new Date()]);
+  return json_({ ok: true, topPicks: topPicks_() });
+}
+
 function doPost(e) {
   const lock = LockService.getScriptLock();
   lock.waitLock(10000); // one claim at a time, so two people can't grab the same gift
@@ -179,6 +219,8 @@ function doPost(e) {
     const body = JSON.parse(e.postData.contents || '{}');
     const id = String(body.id || '').slice(0, 100);
     const token = String(body.token || '').slice(0, 100);
+
+    if (body.action === 'setTop') return setTop_(id, body.top === true, String(body.pin || ''));
     if (!id || !token) return json_({ ok: false, reason: 'bad-request', claimed: claimedIds_() });
 
     const sh = sheet_();
