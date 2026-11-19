@@ -3,7 +3,7 @@
 // stock: "in" | "low" | "out" | "backorder" | "unknown"  (for the exact variant wanted)
 // approx: true when the price came from search results instead of the store page
 window.STATUS = {
-  updated: "2026-11-18",
+  updated: "2026-11-19",
   items: {
     "apple-watch-series-12": {
       deal: { price: 329, store: "Best Buy", link: "https://www.bestbuy.com/site/6572728.p", note: "Target has it for $329.99. Apple charges the full $399." },
