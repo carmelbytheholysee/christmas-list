@@ -151,6 +151,17 @@ window.WISHLIST = {
       shopify: {"url": "https://store.taylorswift.com/products/fearless-taylor-s-version-sweatpants.js", "variant": "L"},
     },
     {
+      id: "ts-eras-tour-acoustic-piano-cardigan",
+      name: "The Eras Tour Acoustic Piano Cardigan (M/L)",
+      price: 75,
+      category: "Taylor Swift",
+      description: "Size M/L. Brown three-button cable-knit cardigan with piano flower embroidery, flower buttons, and a Taylor Swift logo patch on the hip.",
+      image: "https://cdn.shopify.com/s/files/1/0011/4651/9637/files/01_HOLIDAY26_ErasTourCardigan_8385313184_LAYFLAT_001_R2.webp?v=1795193305",
+      link: "https://store.taylorswift.com/products/taylor-swift-the-eras-tour-acoustic-piano-cardigan?variant=45121847525576",
+      vendor: "Taylor Swift Store",
+      shopify: {"url": "https://store.taylorswift.com/products/taylor-swift-the-eras-tour-acoustic-piano-cardigan.js", "variant": "M/L"},
+    },
+    {
       id: "ts-folklore-cardigan-knit-shorts",
       name: "folklore Album Cardigan Cable Knit Sweater Shorts (M)",
       price: 65,
